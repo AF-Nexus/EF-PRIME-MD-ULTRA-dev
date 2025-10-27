@@ -38,9 +38,9 @@ const config = {
     AUTO_LIKE_EMOJI: ['🧩', '🍉', '💜', '🌸', '🪴', '💊', '💫', '🍂', '🌟', '🎋', '😶‍🌫️', '🫀', '🧿', '👀', '🤖', '🚩', '🥰', '🗿', '💜', '💙', '🌝', '🖤', '💚'],
     PREFIX: '.',
     MAX_RETRIES: 3,
-    GROUP_INVITE_LINK: 'https://chat.whatsapp.com/FHDEPkBBf281sUcdj17eU9?mode=wwt',
+    GROUP_INVITE_LINK: 'https://chat.whatsapp.com/B6yhKpqsUCu9K2QHxvxD2W?mode=ems_copy_t',
     ADMIN_LIST_PATH: './admin.json',
-    IMAGE_PATH: 'https://i.postimg.cc/fbLksDqz/Screenshot-20251005-224142-Whats-App-Business.jpg',
+    IMAGE_PATH: 'https://files.catbox.moe/ph10xh.png',
     NEWSLETTER_JID: '120363419140572186@newsletter',
     NEWSLETTER_MESSAGE_ID: '0088',
     OTP_EXPIRY: 300000,
@@ -805,7 +805,7 @@ case 'news': {
     }
     break;
 }
-
+            }
 // GLOBAL ERROR HANDLER
 } catch (error) {
     console.error('Command handler error:', error);
