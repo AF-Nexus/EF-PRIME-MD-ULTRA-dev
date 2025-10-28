@@ -592,20 +592,6 @@ case 'alive': {
 }
 
 //=====================================
-  case 'ping': {     
-                    var inital = new Date().getTime();
-                    let ping = await socket.sendMessage(sender, { text: '*_Pinging to Popkid Xmd..._* 🐥' });
-                    var final = new Date().getTime();
-                    await socket.sendMessage(sender, { text: '《 █▒▒▒▒▒▒▒▒▒▒▒》10%', edit: ping.key });
-                    await socket.sendMessage(sender, { text: '《 ████▒▒▒▒▒▒▒▒》30%', edit: ping.key });
-                    await socket.sendMessage(sender, { text: '《 ███████▒▒▒▒▒》50%', edit: ping.key });
-                    await socket.sendMessage(sender, { text: '《 ██████████▒▒》80%', edit: ping.key });
-                    await socket.sendMessage(sender, { text: '《 ████████████》100%', edit: ping.key });
-
-                    return await socket.sendMessage(sender, {
-                        text: '*Pong '+ (final - inital) + ' Ms*', edit: ping.key });
-                    break;
-                }
 
 
 // OWNER COMMAND WITH VCARD
