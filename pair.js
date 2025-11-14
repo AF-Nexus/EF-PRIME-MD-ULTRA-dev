@@ -794,7 +794,7 @@ case 'boom': {
         });
     }
     break;
-                
+				}        
 case 'song': {
     try {
         const text = (msg.message.conversation || msg.message.extendedTextMessage.text || '').trim();
