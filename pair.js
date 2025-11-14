@@ -770,6 +770,479 @@ case 'song': {
     }
     break;
 }
+        // ==================== GROUP MANAGEMENT COMMANDS ====================
+
+case 'add': {
+    if (!isGroup) return await socket.sendMessage(sender, { text: '❌ This command is only for groups!' });
+    if (!isBotAdmin) return await socket.sendMessage(sender, { text: '❌ Bot must be admin to add members!' });
+    if (!isAdmin) return await socket.sendMessage(sender, { text: '❌ Only admins can use this command!' });
+
+    const users = mentionedJid.length > 0 ? mentionedJid : [args[0] + '@s.whatsapp.net'];
+    
+    let adding = await socket.sendMessage(sender, { text: '*_Adding members..._* ⏳' });
+    
+    try {
+        const result = await socket.groupParticipantsUpdate(sender, users, 'add');
+        
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *✅ MEMBER ADDED* ❒\n├⬡ Successfully added to group\n╰────────────❒',
+            edit: adding.key
+        });
+    } catch (err) {
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *❌ ADD FAILED* ❒\n├⬡ Failed to add member\n├⬡ Member might have privacy settings\n╰────────────❒',
+            edit: adding.key
+        });
+    }
+    break;
+}
+
+case 'kick': {
+    if (!isGroup) return await socket.sendMessage(sender, { text: '❌ This command is only for groups!' });
+    if (!isBotAdmin) return await socket.sendMessage(sender, { text: '❌ Bot must be admin to remove members!' });
+    if (!isAdmin) return await socket.sendMessage(sender, { text: '❌ Only admins can use this command!' });
+
+    const users = mentionedJid.length > 0 ? mentionedJid : [args[0] + '@s.whatsapp.net'];
+    
+    let removing = await socket.sendMessage(sender, { text: '*_Removing members..._* ⏳' });
+    
+    try {
+        await socket.groupParticipantsUpdate(sender, users, 'remove');
+        
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *✅ MEMBER REMOVED* ❒\n├⬡ Successfully removed from group\n╰────────────❒',
+            edit: removing.key
+        });
+    } catch (err) {
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *❌ KICK FAILED* ❒\n├⬡ Failed to remove member\n╰────────────❒',
+            edit: removing.key
+        });
+    }
+    break;
+}
+
+case 'promote': {
+    if (!isGroup) return await socket.sendMessage(sender, { text: '❌ This command is only for groups!' });
+    if (!isBotAdmin) return await socket.sendMessage(sender, { text: '❌ Bot must be admin to promote members!' });
+    if (!isAdmin) return await socket.sendMessage(sender, { text: '❌ Only admins can use this command!' });
+
+    const users = mentionedJid.length > 0 ? mentionedJid : [args[0] + '@s.whatsapp.net'];
+    
+    let promoting = await socket.sendMessage(sender, { text: '*_Promoting member..._* ⏳' });
+    
+    try {
+        await socket.groupParticipantsUpdate(sender, users, 'promote');
+        
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *✅ MEMBER PROMOTED* ❒\n├⬡ Successfully promoted to admin\n╰────────────❒',
+            edit: promoting.key
+        });
+    } catch (err) {
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *❌ PROMOTE FAILED* ❒\n├⬡ Failed to promote member\n╰────────────❒',
+            edit: promoting.key
+        });
+    }
+    break;
+}
+
+case 'demote': {
+    if (!isGroup) return await socket.sendMessage(sender, { text: '❌ This command is only for groups!' });
+    if (!isBotAdmin) return await socket.sendMessage(sender, { text: '❌ Bot must be admin to demote members!' });
+    if (!isAdmin) return await socket.sendMessage(sender, { text: '❌ Only admins can use this command!' });
+
+    const users = mentionedJid.length > 0 ? mentionedJid : [args[0] + '@s.whatsapp.net'];
+    
+    let demoting = await socket.sendMessage(sender, { text: '*_Demoting admin..._* ⏳' });
+    
+    try {
+        await socket.groupParticipantsUpdate(sender, users, 'demote');
+        
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *✅ ADMIN DEMOTED* ❒\n├⬡ Successfully demoted to member\n╰────────────❒',
+            edit: demoting.key
+        });
+    } catch (err) {
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *❌ DEMOTE FAILED* ❒\n├⬡ Failed to demote admin\n╰────────────❒',
+            edit: demoting.key
+        });
+    }
+    break;
+}
+
+case 'groupinfo': {
+    if (!isGroup) return await socket.sendMessage(sender, { text: '❌ This command is only for groups!' });
+    
+    let fetching = await socket.sendMessage(sender, { text: '*_Fetching group info..._* ⏳' });
+    
+    try {
+        const metadata = await socket.groupMetadata(sender);
+        const admins = metadata.participants.filter(p => p.admin).length;
+        const members = metadata.participants.length;
+        
+        const title = '*ᴇꜰ-ᴘʀɪᴍᴇ-ᴜʟᴛʀᴀ ɢʀᴏᴜᴘ ɪɴꜰᴏ*';
+        const content = `╭────❒ *📊 GROUP INFO* ❒\n` +
+            `├⬡ 📝 \`ɴᴀᴍᴇ\` : ${metadata.subject}\n` +
+            `├⬡ 🆔 \`ɪᴅ\` : ${metadata.id}\n` +
+            `├⬡ 👥 \`ᴍᴇᴍʙᴇʀꜱ\` : ${members}\n` +
+            `├⬡ 👮 \`ᴀᴅᴍɪɴꜱ\` : ${admins}\n` +
+            `├⬡ 📅 \`ᴄʀᴇᴀᴛᴇᴅ\` : ${new Date(metadata.creation * 1000).toLocaleDateString()}\n` +
+            `├⬡ 📋 \`ᴅᴇꜱᴄ\` : ${metadata.desc || 'No description'}\n` +
+            `╰────────────❒`;
+        const footer = config.BOT_FOOTER;
+
+        await socket.sendMessage(sender, {
+            text: formatMessage(title, content, footer),
+            edit: fetching.key
+        });
+    } catch (err) {
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *❌ FETCH FAILED* ❒\n├⬡ Could not fetch group info\n╰────────────❒',
+            edit: fetching.key
+        });
+    }
+    break;
+}
+
+case 'setname': {
+    if (!isGroup) return await socket.sendMessage(sender, { text: '❌ This command is only for groups!' });
+    if (!isBotAdmin) return await socket.sendMessage(sender, { text: '❌ Bot must be admin to change group name!' });
+    if (!isAdmin) return await socket.sendMessage(sender, { text: '❌ Only admins can use this command!' });
+    if (!args[0]) return await socket.sendMessage(sender, { text: `❌ Usage: ${config.PREFIX}setname <new name>` });
+
+    const newName = args.join(' ');
+    let updating = await socket.sendMessage(sender, { text: '*_Updating group name..._* ⏳' });
+    
+    try {
+        await socket.groupUpdateSubject(sender, newName);
+        
+        await socket.sendMessage(sender, {
+            text: `╭────❒ *✅ NAME UPDATED* ❒\n├⬡ New name: ${newName}\n╰────────────❒`,
+            edit: updating.key
+        });
+    } catch (err) {
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *❌ UPDATE FAILED* ❒\n├⬡ Could not update group name\n╰────────────❒',
+            edit: updating.key
+        });
+    }
+    break;
+}
+
+case 'setdesc': {
+    if (!isGroup) return await socket.sendMessage(sender, { text: '❌ This command is only for groups!' });
+    if (!isBotAdmin) return await socket.sendMessage(sender, { text: '❌ Bot must be admin to change description!' });
+    if (!isAdmin) return await socket.sendMessage(sender, { text: '❌ Only admins can use this command!' });
+    if (!args[0]) return await socket.sendMessage(sender, { text: `❌ Usage: ${config.PREFIX}setdesc <new description>` });
+
+    const newDesc = args.join(' ');
+    let updating = await socket.sendMessage(sender, { text: '*_Updating description..._* ⏳' });
+    
+    try {
+        await socket.groupUpdateDescription(sender, newDesc);
+        
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *✅ DESCRIPTION UPDATED* ❒\n├⬡ Group description has been updated\n╰────────────❒',
+            edit: updating.key
+        });
+    } catch (err) {
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *❌ UPDATE FAILED* ❒\n├⬡ Could not update description\n╰────────────❒',
+            edit: updating.key
+        });
+    }
+    break;
+}
+
+case 'lock': {
+    if (!isGroup) return await socket.sendMessage(sender, { text: '❌ This command is only for groups!' });
+    if (!isBotAdmin) return await socket.sendMessage(sender, { text: '❌ Bot must be admin to lock group!' });
+    if (!isAdmin) return await socket.sendMessage(sender, { text: '❌ Only admins can use this command!' });
+
+    let locking = await socket.sendMessage(sender, { text: '*_Locking group..._* 🔒' });
+    
+    try {
+        await socket.groupSettingUpdate(sender, 'announcement');
+        
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *🔒 GROUP LOCKED* ❒\n├⬡ Only admins can send messages now\n╰────────────❒',
+            edit: locking.key
+        });
+    } catch (err) {
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *❌ LOCK FAILED* ❒\n├⬡ Could not lock group\n╰────────────❒',
+            edit: locking.key
+        });
+    }
+    break;
+}
+
+case 'unlock': {
+    if (!isGroup) return await socket.sendMessage(sender, { text: '❌ This command is only for groups!' });
+    if (!isBotAdmin) return await socket.sendMessage(sender, { text: '❌ Bot must be admin to unlock group!' });
+    if (!isAdmin) return await socket.sendMessage(sender, { text: '❌ Only admins can use this command!' });
+
+    let unlocking = await socket.sendMessage(sender, { text: '*_Unlocking group..._* 🔓' });
+    
+    try {
+        await socket.groupSettingUpdate(sender, 'not_announcement');
+        
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *🔓 GROUP UNLOCKED* ❒\n├⬡ All members can send messages now\n╰────────────❒',
+            edit: unlocking.key
+        });
+    } catch (err) {
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *❌ UNLOCK FAILED* ❒\n├⬡ Could not unlock group\n╰────────────❒',
+            edit: unlocking.key
+        });
+    }
+    break;
+}
+
+case 'leave': {
+    if (!isGroup) return await socket.sendMessage(sender, { text: '❌ This command is only for groups!' });
+    if (!isAdmin) return await socket.sendMessage(sender, { text: '❌ Only admins can make bot leave!' });
+
+    await socket.sendMessage(sender, { 
+        text: '╭────❒ *👋 LEAVING GROUP* ❒\n├⬡ Goodbye everyone!\n╰────────────❒'
+    });
+    
+    setTimeout(async () => {
+        await socket.groupLeave(sender);
+    }, 3000);
+    break;
+}
+
+case 'tagall': {
+    if (!isGroup) return await socket.sendMessage(sender, { text: '❌ This command is only for groups!' });
+    if (!isAdmin) return await socket.sendMessage(sender, { text: '❌ Only admins can use this command!' });
+
+    const metadata = await socket.groupMetadata(sender);
+    const participants = metadata.participants;
+    const message = args.join(' ') || 'Group Announcement';
+    
+    let mentions = participants.map(p => p.id);
+    let text = `╭────❒ *📢 TAG ALL* ❒\n├⬡ ${message}\n├⬡\n`;
+    
+    for (let participant of participants) {
+        text += `├⬡ @${participant.id.split('@')[0]}\n`;
+    }
+    text += `╰────────────❒`;
+
+    await socket.sendMessage(sender, {
+        text: text,
+        mentions: mentions
+    });
+    break;
+}
+
+case 'hidetag': {
+    if (!isGroup) return await socket.sendMessage(sender, { text: '❌ This command is only for groups!' });
+    if (!isAdmin) return await socket.sendMessage(sender, { text: '❌ Only admins can use this command!' });
+
+    const metadata = await socket.groupMetadata(sender);
+    const participants = metadata.participants;
+    const message = args.join(' ') || 'Hidden Tag Message';
+    
+    let mentions = participants.map(p => p.id);
+
+    await socket.sendMessage(sender, {
+        text: message,
+        mentions: mentions
+    });
+    break;
+}
+
+case 'invite': {
+    if (!isGroup) return await socket.sendMessage(sender, { text: '❌ This command is only for groups!' });
+    if (!isBotAdmin) return await socket.sendMessage(sender, { text: '❌ Bot must be admin to get invite link!' });
+
+    let fetching = await socket.sendMessage(sender, { text: '*_Fetching invite link..._* ⏳' });
+    
+    try {
+        const code = await socket.groupInviteCode(sender);
+        const link = `https://chat.whatsapp.com/${code}`;
+        
+        await socket.sendMessage(sender, {
+            text: `╭────❒ *🔗 GROUP INVITE* ❒\n├⬡ ${link}\n╰────────────❒`,
+            edit: fetching.key
+        });
+    } catch (err) {
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *❌ FETCH FAILED* ❒\n├⬡ Could not get invite link\n╰────────────❒',
+            edit: fetching.key
+        });
+    }
+    break;
+}
+
+case 'revoke': {
+    if (!isGroup) return await socket.sendMessage(sender, { text: '❌ This command is only for groups!' });
+    if (!isBotAdmin) return await socket.sendMessage(sender, { text: '❌ Bot must be admin to revoke invite!' });
+    if (!isAdmin) return await socket.sendMessage(sender, { text: '❌ Only admins can use this command!' });
+
+    let revoking = await socket.sendMessage(sender, { text: '*_Revoking invite link..._* ⏳' });
+    
+    try {
+        const code = await socket.groupRevokeInvite(sender);
+        const link = `https://chat.whatsapp.com/${code}`;
+        
+        await socket.sendMessage(sender, {
+            text: `╭────❒ *🔄 LINK REVOKED* ❒\n├⬡ New link: ${link}\n╰────────────❒`,
+            edit: revoking.key
+        });
+    } catch (err) {
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *❌ REVOKE FAILED* ❒\n├⬡ Could not revoke invite link\n╰────────────❒',
+            edit: revoking.key
+        });
+    }
+    break;
+}
+
+// ==================== ACCOUNT MANAGEMENT COMMANDS ====================
+
+case 'block': {
+    if (!isOwner) return await socket.sendMessage(sender, { text: '❌ Only owner can use this command!' });
+    
+    const user = mentionedJid[0] || args[0] + '@s.whatsapp.net';
+    let blocking = await socket.sendMessage(sender, { text: '*_Blocking user..._* ⏳' });
+    
+    try {
+        await socket.updateBlockStatus(user, 'block');
+        
+        await socket.sendMessage(sender, {
+            text: `╭────❒ *🚫 USER BLOCKED* ❒\n├⬡ User has been blocked\n╰────────────❒`,
+            edit: blocking.key
+        });
+    } catch (err) {
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *❌ BLOCK FAILED* ❒\n├⬡ Could not block user\n╰────────────❒',
+            edit: blocking.key
+        });
+    }
+    break;
+}
+
+case 'unblock': {
+    if (!isOwner) return await socket.sendMessage(sender, { text: '❌ Only owner can use this command!' });
+    
+    const user = mentionedJid[0] || args[0] + '@s.whatsapp.net';
+    let unblocking = await socket.sendMessage(sender, { text: '*_Unblocking user..._* ⏳' });
+    
+    try {
+        await socket.updateBlockStatus(user, 'unblock');
+        
+        await socket.sendMessage(sender, {
+            text: `╭────❒ *✅ USER UNBLOCKED* ❒\n├⬡ User has been unblocked\n╰────────────❒`,
+            edit: unblocking.key
+        });
+    } catch (err) {
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *❌ UNBLOCK FAILED* ❒\n├⬡ Could not unblock user\n╰────────────❒',
+            edit: unblocking.key
+        });
+    }
+    break;
+}
+
+case 'setbio': {
+    if (!isOwner) return await socket.sendMessage(sender, { text: '❌ Only owner can use this command!' });
+    if (!args[0]) return await socket.sendMessage(sender, { text: `❌ Usage: ${config.PREFIX}setbio <new bio>` });
+
+    const newBio = args.join(' ');
+    let updating = await socket.sendMessage(sender, { text: '*_Updating bio..._* ⏳' });
+    
+    try {
+        await socket.updateProfileStatus(newBio);
+        
+        await socket.sendMessage(sender, {
+            text: `╭────❒ *✅ BIO UPDATED* ❒\n├⬡ New bio: ${newBio}\n╰────────────❒`,
+            edit: updating.key
+        });
+    } catch (err) {
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *❌ UPDATE FAILED* ❒\n├⬡ Could not update bio\n╰────────────❒',
+            edit: updating.key
+        });
+    }
+    break;
+}
+
+case 'setname': {
+    if (!isOwner) return await socket.sendMessage(sender, { text: '❌ Only owner can use this command!' });
+    if (!args[0]) return await socket.sendMessage(sender, { text: `❌ Usage: ${config.PREFIX}setname <new name>` });
+
+    const newName = args.join(' ');
+    let updating = await socket.sendMessage(sender, { text: '*_Updating name..._* ⏳' });
+    
+    try {
+        await socket.updateProfileName(newName);
+        
+        await socket.sendMessage(sender, {
+            text: `╭────❒ *✅ NAME UPDATED* ❒\n├⬡ New name: ${newName}\n╰────────────❒`,
+            edit: updating.key
+        });
+    } catch (err) {
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *❌ UPDATE FAILED* ❒\n├⬡ Could not update name\n╰────────────❒',
+            edit: updating.key
+        });
+    }
+    break;
+}
+
+case 'setpp': {
+    if (!isOwner) return await socket.sendMessage(sender, { text: '❌ Only owner can use this command!' });
+    if (!quotedMsg || !quotedMsg.imageMessage) {
+        return await socket.sendMessage(sender, { text: '❌ Please reply to an image!' });
+    }
+
+    let updating = await socket.sendMessage(sender, { text: '*_Updating profile picture..._* ⏳' });
+    
+    try {
+        const media = await downloadMediaMessage(quotedMsg, 'buffer', {}, { 
+            reuploadRequest: socket.updateMediaMessage 
+        });
+        
+        await socket.updateProfilePicture(socket.user.id, media);
+        
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *✅ PP UPDATED* ❒\n├⬡ Profile picture has been updated\n╰────────────❒',
+            edit: updating.key
+        });
+    } catch (err) {
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *❌ UPDATE FAILED* ❒\n├⬡ Could not update profile picture\n╰────────────❒',
+            edit: updating.key
+        });
+    }
+    break;
+}
+
+case 'deletepp': {
+    if (!isOwner) return await socket.sendMessage(sender, { text: '❌ Only owner can use this command!' });
+
+    let deleting = await socket.sendMessage(sender, { text: '*_Deleting profile picture..._* ⏳' });
+    
+    try {
+        await socket.removeProfilePicture(socket.user.id);
+        
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *✅ PP DELETED* ❒\n├⬡ Profile picture has been removed\n╰────────────❒',
+            edit: deleting.key
+        });
+    } catch (err) {
+        await socket.sendMessage(sender, {
+            text: '╭────❒ *❌ DELETE FAILED* ❒\n├⬡ Could not remove profile picture\n╰────────────❒',
+            edit: deleting.key
+        });
+    }
+    break;
+        }
 // NEWS COMMAND
 case 'news': {
                     await socket.sendMessage(sender, {
