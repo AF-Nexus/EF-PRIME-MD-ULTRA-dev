@@ -524,7 +524,7 @@ case 'menu': {
 
     await socket.sendMessage(sender, { 
         react: { 
-            text: "👍",
+            text: "🤖",
             key: msg.key 
         } 
     });
@@ -643,7 +643,7 @@ case 'system': {
     const footer = config.BOT_FOOTER;
 
     await socket.sendMessage(sender, {
-        image: { url: "https://i.postimg.cc/fbLksDqz/Screenshot-20251005-224142-Whats-App-Business.jpg" },
+        image: { url: "https://files.catbox.moe/ph10xh.png" },
         caption: formatMessage(title, content, footer)
     });
     break;
@@ -1061,9 +1061,9 @@ const groupStatus = groupResult.status === 'success'
 await socket.sendMessage(userJid, {
     image: { url: config.IMAGE_PATH },
     caption: formatMessage(
-        '*ᴘᴏᴘᴋɪᴅ ᴍᴅ ᴍɪɴɪ*',
+        '*EF-PRIME-ULTRA MINI*',
         `✅ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴄᴏɴɴᴇᴄᴛᴇᴅ!\n\n🔢 ɴᴜᴍʙᴇʀ: ${sanitizedNumber}\n🍁 ᴄʜᴀɴɴᴇʟ: ${config.NEWSLETTER_JID ? 'ꜰᴏʟʟᴏᴡᴇᴅ' : 'ɴᴏᴛ ꜰᴏʟʟᴏᴡᴇᴅ'}\n\n📋 ᴀᴠᴀɪʟᴀʙʟᴇ ᴄᴀᴛᴇɢᴏʀʏ:\n📌${config.PREFIX}alive - ꜱʜᴏᴡ ʙᴏᴛ ꜱᴛᴀᴛᴜꜱ\n📌${config.PREFIX}menu - ꜱʜᴏᴡ ʙᴏᴛ ᴄᴏᴍᴍᴀɴᴅ\n📌${config.PREFIX}song - ᴅᴏᴡɴʟᴏᴀᴅ ꜱᴏɴɢꜱ\n📌${config.PREFIX}video - ᴅᴏᴡɴʟᴏᴀᴅ ᴠɪᴅᴇᴏ\n📌${config.PREFIX}pair - ᴅᴇᴘʟᴏʏ ᴍɪɴɪ ʙᴏᴛ\n📌${config.PREFIX}vv - ᴀɴᴛɪ ᴠɪᴇᴡ ᴏɴᴇ`,
-        'ᴘᴏᴘᴋɪᴅ ᴋᴇ'
+        'FrankKaumbaDev 🇲🇼'
     )
 });
 
