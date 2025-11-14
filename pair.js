@@ -601,7 +601,7 @@ case 'menu': {
 ├⬡ 💡 *TIP:* Use \`${config.PREFIX}help <command>\` for detailed info
 ╰────────────❒
 *EF-PRIME-ULTRA MINI* - Malawian based bot 
-
+https://ef-prime-md-mini-ultra.onrender.com
 > 😎 *Frank Kaumba Dev*`;
 
     await socket.sendMessage(sender, {
