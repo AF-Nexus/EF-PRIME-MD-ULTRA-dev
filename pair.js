@@ -563,7 +563,7 @@ case 'menu': {
 ├ ${config.PREFIX}video - download video from youtube
 
 🎪 *FUN ZONE*
-├ ${config.PREFIX}boom 5 hello - send multiple messages
+├ ${config.PREFIX}(available soon)
 
 👥 *GROUP MANAGEMENT*
 ├ ${config.PREFIX}add - add member to group
