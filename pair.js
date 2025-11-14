@@ -28,7 +28,8 @@ const {
     jidNormalizedUser,
     proto,
     prepareWAMessageMedia,
-    generateWAMessageFromContent
+    generateWAMessageFromContent,
+    downloadMediaMessage
 } = require('@whiskeysockets/baileys');
 //=======================================
 const config = {
