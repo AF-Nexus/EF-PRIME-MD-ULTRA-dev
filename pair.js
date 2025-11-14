@@ -546,6 +546,7 @@ case 'menu': {
 ├⬡ 🪢 Runtime: ${hours}h ${minutes}m ${seconds}s
 ╰────────────❒
 
+
 ⚙️ *SETTINGS*
 ├ ${config.PREFIX}bot set - configure bot settings
 ├ ${config.PREFIX}group set - configure group settings
@@ -563,13 +564,37 @@ case 'menu': {
 🎪 *FUN ZONE*
 ├ ${config.PREFIX}boom 5 hello - send multiple messages
 
+👥 *GROUP MANAGEMENT*
+├ ${config.PREFIX}add - add member to group
+├ ${config.PREFIX}kick - remove member from group
+├ ${config.PREFIX}promote - make member admin
+├ ${config.PREFIX}demote - remove admin status
+├ ${config.PREFIX}groupinfo - display group info
+├ ${config.PREFIX}setname - change group name
+├ ${config.PREFIX}setdesc - change group description
+├ ${config.PREFIX}lock - lock group (admin only)
+├ ${config.PREFIX}unlock - unlock group
+├ ${config.PREFIX}leave - bot leaves group
+├ ${config.PREFIX}tagall - tag all members
+├ ${config.PREFIX}hidetag - hidden tag message
+├ ${config.PREFIX}invite - get group invite link
+├ ${config.PREFIX}revoke - revoke invite link
+
+👤 *ACCOUNT MANAGEMENT*
+├ ${config.PREFIX}block - block user (owner)
+├ ${config.PREFIX}unblock - unblock user (owner)
+├ ${config.PREFIX}setbio - update bot bio (owner)
+├ ${config.PREFIX}setname - update bot name (owner)
+├ ${config.PREFIX}setpp - update profile picture (owner)
+├ ${config.PREFIX}deletepp - remove profile picture (owner)
+
 🔧 *OTHER COMMANDS*
 ├ ${config.PREFIX}owner - contact bot owner
 ├ ${config.PREFIX}preferences - change bot settings
 ├ ${config.PREFIX}channel - get our channel link
 
 ╭─────────❒
-├⬡ Total Commands: 25+ 
+├⬡ Total Commands: 40+ 
 ├⬡ Bot Version: EF-PRIME-ULTRA-MINI
 ├⬡ Current Prefix: ${config.PREFIX}
 ├⬡ 💡 *TIP:* Use \`${config.PREFIX}help <command>\` for detailed info
