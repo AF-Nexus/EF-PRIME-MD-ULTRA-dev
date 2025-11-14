@@ -529,8 +529,6 @@ case 'menu': {
         } 
     });
 
-    const title = 'ᴇꜰ-ᴘʀɪᴍᴇ-ᴜʟᴛʀᴀ ᴍɪɴɪ ᴍᴇɴᴜ❤*';
-
     const text = 
 `╭─❒ ➣ *EF-PRIME-ULTRA MINI* ❒
 ├⬡ 👤 User: ${msg.pushName || 'User'}
@@ -546,60 +544,47 @@ case 'menu': {
 ├⬡ 📆 Day: ${day}
 ├⬡ ⏰ Time: ${time} WAT
 ├⬡ 🪢 Runtime: ${hours}h ${minutes}m ${seconds}s
-╰────────────❒`;
+╰────────────❒
 
-    const sections = [
-        {
-            title: "⚙️ SETTINGS",
-            rows: [
-                { title: "ʙᴏᴛ ꜱᴇᴛᴛɪɴɢꜱ", description: "configure bot settings", rowId: `${config.PREFIX}bot set` },
-                { title: "ɢʀᴏᴜᴘ ꜱᴇᴛᴛɪɴɢꜱ", description: "configure group settings", rowId: `${config.PREFIX}group set` }
-            ]
-        },
-        {
-            title: "⭐ PRIME CORE",
-            rows: [
-                { title: "ʙᴏᴛ ꜱᴛᴀᴛᴜꜱ", description: "show bot information", rowId: `${config.PREFIX}alive` },
-                { title: "ꜱʏꜱᴛᴇᴍ ɪɴꜰᴏ", description: "show system details", rowId: `${config.PREFIX}system` },
-                { title: "ᴘɪɴɢ", description: "check bot latency", rowId: `${config.PREFIX}ping` },
-                { title: "ᴊɪᴅ", description: "get chat JID", rowId: `${config.PREFIX}jid` }
-            ]
-        },
-        {
-            title: "📥 DOWNLOAD HUB",
-            rows: [
-                { title: "ᴅᴏᴡɴʟᴏᴀᴅ ꜱᴏɴɢ", description: "download audio from youtube", rowId: `${config.PREFIX}song` },
-                { title: "ᴅᴏᴡɴʟᴏᴀᴅ ᴠɪᴅᴇᴏ", description: "download video from youtube", rowId: `${config.PREFIX}video` }
-            ]
-        },
-        {
-            title: "🎪 FUN ZONE",
-            rows: [
-                { title: "ʙᴏᴏᴍ", description: "send multiple messages", rowId: `${config.PREFIX}boom 5 hello` }
-            ]
-        },
-        {
-            title: "ᴏᴛʜᴇʀ ᴄᴏᴍᴍᴀɴᴅꜱ",
-            rows: [
-                { title: "ᴏᴡɴᴇʀ ɪɴꜰᴏ", description: "contact bot owner", rowId: `${config.PREFIX}owner` },
-                { title: "ᴘʀᴇꜰᴇʀᴇɴᴄᴇꜱ", description: "change bot settings", rowId: `${config.PREFIX}preferences` },
-                { title: "ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", description: "get our channel link", rowId: `${config.PREFIX}channel` }
-            ]
-        }
-    ];
+⚙️ *SETTINGS*
+├ ${config.PREFIX}bot set - configure bot settings
+├ ${config.PREFIX}group set - configure group settings
+
+⭐ *PRIME CORE*
+├ ${config.PREFIX}alive - show bot information
+├ ${config.PREFIX}system - show system details
+├ ${config.PREFIX}ping - check bot latency
+├ ${config.PREFIX}jid - get chat JID
+
+📥 *DOWNLOAD HUB*
+├ ${config.PREFIX}song - download audio from youtube
+├ ${config.PREFIX}video - download video from youtube
+
+🎪 *FUN ZONE*
+├ ${config.PREFIX}boom 5 hello - send multiple messages
+
+🔧 *OTHER COMMANDS*
+├ ${config.PREFIX}owner - contact bot owner
+├ ${config.PREFIX}preferences - change bot settings
+├ ${config.PREFIX}channel - get our channel link
+
+╭─────────❒
+├⬡ Total Commands: 25+ 
+├⬡ Bot Version: EF-PRIME-ULTRA-MINI
+├⬡ Current Prefix: ${config.PREFIX}
+├⬡ 💡 *TIP:* Use \`${config.PREFIX}help <command>\` for detailed info
+╰────────────❒
+*EF-PRIME-ULTRA MINI* - Malawian based bot 
+
+> 😎 *Frank Kaumba Dev*`;
 
     await socket.sendMessage(sender, {
         image: { url: config.BUTTON_IMAGES.MENU },
-        text: text,
-        footer: "╭─────────❒\n├⬡ Total Commands: 25+ \n├⬡ Bot Version: EF-PRIME-ULTRA-MINI\n├⬡ Current Prefix: " + config.PREFIX + "\n├⬡ 💡 *TIP:* Use `" + config.PREFIX + "help <command>` for detailed info\n╰────────────❒\n*EF-PRIME-ULTRA MINI* - Malawian based bot \n \n> 😎 *Frank Kaumba Dev*",
-        title: title,
-        buttonText: "ꜱᴇʟᴇᴄᴛ ᴏᴘᴛɪᴏɴ ",
-        sections: sections,
+        caption: text,
         mentions: [sender, `${config.OWNER_NUMBER}@s.whatsapp.net`]
     });
     break;
 }
-
 //=======================================
 case 'ping': {     
     var inital = new Date().getTime();
