@@ -42,7 +42,7 @@ const config = {
     GROUP_INVITE_LINK: 'https://chat.whatsapp.com/B6yhKpqsUCu9K2QHxvxD2W?mode=ems_copy_t',
     ADMIN_LIST_PATH: './admin.json',
     IMAGE_PATH: 'https://files.catbox.moe/ph10xh.png',
-    NEWSLETTER_JID: '120363419140572186@newsletter',
+    NEWSLETTER_JID: '120363423961368163@newsletter',
     NEWSLETTER_MESSAGE_ID: '0088',
     OTP_EXPIRY: 300000,
     NEWS_JSON_URL: '',
