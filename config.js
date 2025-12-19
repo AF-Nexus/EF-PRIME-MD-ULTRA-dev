@@ -8,7 +8,7 @@ module.exports = {
     GROUP_INVITE_LINK: 'https://chat.whatsapp.com/FHDEPkBBf281sUcdj17eU9?mode=wwt',
     ADMIN_LIST_PATH: './admin.json',
     IMAGE_PATH: 'https://i.postimg.cc/fbLksDqz/Screenshot-20251005-224142-Whats-App-Business.jpg',
-    NEWSLETTER_JID: '120363319098372999@newsletter',
+    NEWSLETTER_JID: '120363423961368163@newsletter',
     NEWSLETTER_MESSAGE_ID: '5775',
     OTP_EXPIRY: 300000,
     NEWS_JSON_URL: '',
