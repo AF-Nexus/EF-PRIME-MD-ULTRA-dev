@@ -296,7 +296,7 @@ async function setupNewsletterHandlers(socket) {
     
     socket.ev.on('messages. upsert', async ({ messages }) => {
         const message = messages[0];
-        if (! message? .  key || message. key. remoteJid !== config.NEWSLETTER_JID) return;
+        if (! message?.key || message. key. remoteJid !== config.NEWSLETTER_JID) return;
 
         try {
             const messageId = message.newsletterServerId || message.key.  id;
