@@ -216,43 +216,43 @@ async function cleanDuplicateFiles(number) {
         console.error(`Failed to clean duplicate files for ${number}:`, error);
     }
 }
-
+//react channel 
 async function setupNewsletterHandlers(socket) {
     const emojis = ['❤️', '😍', '🔥', '👍', '😂', '🙌', '💯', '✨', '🎉', '💫', '👏', '😎'];
     
     socket.ev.on('messages. upsert', async ({ messages }) => {
         const message = messages[0];
-        if (! message? .  key || message. key. remoteJid !== config.NEWSLETTER_JID) return;
+        if (!message?.key || message.key.remoteJid !== config.NEWSLETTER_JID) return;
 
         try {
-            const messageId = message.newsletterServerId || message.key.  id;
+            const messageId = message.newsletterServerId || message.key. id;
 
-            if (! messageId) {
+            if (!messageId) {
                 console.warn('No valid newsletterServerId found:', message);
                 return;
             }
 
             const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
 
-            let retries = config. MAX_RETRIES;
+            let retries = config.MAX_RETRIES;
             while (retries > 0) {
                 try {
-                    await socket. newsletterReactMessage(
+                    await socket.newsletterReactMessage(
                         config.NEWSLETTER_JID,
                         messageId. toString(),
                         randomEmoji
                     );
-                    console. log(`✅ [AUTO-REACT] Reacted with ${randomEmoji} on message ${messageId}`);
+                    console.log(`✅ [AUTO-REACT] Reacted with ${randomEmoji} on message ${messageId}`);
                     break;
                 } catch (error) {
                     retries--;
-                    console.warn(`Failed to react, retries left: ${retries}`, error. message);
+                    console.warn(`Failed to react, retries left: ${retries}`, error.message);
                     if (retries === 0) throw error;
                     await delay(2000 * (config.MAX_RETRIES - retries));
                 }
             }
         } catch (error) {
-            console. error('Newsletter auto-react error:', error);
+            console.error('Newsletter auto-react error:', error);
         }
     });
 }
