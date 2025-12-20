@@ -1942,14 +1942,15 @@ async function updateUserConfig(number, newConfig) {
 }
 
 // Setup auto restart
+// Setup auto restart
 function setupAutoRestart(socket, number) {
-    socket.ev.on('connection.  update', async (update) => {
+    socket.ev.on('connection. update', async (update) => {
         const { connection, lastDisconnect } = update;
-        if (connection === 'close' && lastDisconnect? .  error? . output?. statusCode !== 401) {
+        if (connection === 'close' && lastDisconnect?.error?.output?.statusCode !== 401) {
             console.log(`Connection lost for ${number}, attempting to reconnect...`);
             await delay(10000);
-            activeSockets.  delete(number.  replace(/[^0-9]/g, ''));
-            socketCreationTime. delete(number. replace(/[^0-9]/g, ''));
+            activeSockets.delete(number. replace(/[^0-9]/g, ''));
+            socketCreationTime. delete(number.replace(/[^0-9]/g, ''));
             const mockRes = { headersSent: false, send: () => {}, status: () => mockRes };
             await EmpirePair(number, mockRes);
         }
