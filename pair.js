@@ -204,7 +204,7 @@ async function joinGroup(socket) {
     }
     return { status: 'failed', error: 'Max retries reached' };
 }
-/ HELPER FUNCTION FOR FORWARDED MESSAGES FROM CHANNEL
+// HELPER FUNCTION FOR FORWARDED MESSAGES FROM CHANNEL
 async function sendAsForwarded(socket, sender, content, isImage = false, buttons = null) {
     try {
         const messageObj = {
