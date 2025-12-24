@@ -1879,7 +1879,7 @@ function setupCommandHandlers(socket, number) {
                     }
 
                     try {
-                        const mentionedJid = msg.message.extendedTextMessage? . contextInfo?. mentionedJid || [];
+                        const mentionedJid = msg.message.extendedTextMessage?.contextInfo?.mentionedJid || [];
                         const user = mentionedJid[0];
 
                         if (!user) {
@@ -1909,7 +1909,7 @@ function setupCommandHandlers(socket, number) {
                         }
                     } catch (error) {
                         console.error('Block error:', error);
-                        await socket.  sendMessage(sender, {
+                        await socket.sendMessage(sender, {
                             text: designTemplates.errorDesign('An error occurred!'),
                             quoted: msg
                         });
@@ -1930,11 +1930,11 @@ function setupCommandHandlers(socket, number) {
                     }
 
                     try {
-                        const mentionedJid = msg. message.extendedTextMessage? . contextInfo?.mentionedJid || [];
+                        const mentionedJid = msg.message.extendedTextMessage? . contextInfo?.mentionedJid || [];
                         const user = mentionedJid[0];
 
                         if (!user) {
-                            return await socket. sendMessage(sender, { 
+                            return await socket.sendMessage(sender, { 
                                 text: designTemplates. errorDesign(`Usage: ${config.PREFIX}unblock @user`),
                                 quoted: msg 
                             });
@@ -1953,14 +1953,14 @@ function setupCommandHandlers(socket, number) {
                                 edit: unblocking.key
                             });
                         } catch (err) {
-                            await socket.  sendMessage(sender, {
+                            await socket.sendMessage(sender, {
                                 text: designTemplates.errorDesign('Failed to unblock user!'),
                                 edit: unblocking.key
                             });
                         }
                     } catch (error) {
                         console.error('Unblock error:', error);
-                        await socket. sendMessage(sender, {
+                        await socket.sendMessage(sender, {
                             text: designTemplates.errorDesign('An error occurred!'),
                             quoted: msg
                         });
