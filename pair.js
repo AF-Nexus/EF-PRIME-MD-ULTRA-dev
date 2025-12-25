@@ -1033,166 +1033,153 @@ function setupCommandHandlers(socket, number) {
                 }
 
                 // SONG & VIDEO DOWNLOAD
-                case 'song': 
-                case 'play': {
-                    try {
-                        const text = (msg.message.conversation || msg.message.extendedTextMessage?.text || '').trim();
-                        const q = text.split(" ").slice(1).join(" ").trim();
-                        
-                        if (! q) {
-                            await socket.sendMessage(sender, { 
-                                text: designTemplates.errorDesign(`Please provide a song name\n\nUsage: ${config.PREFIX}song <song name>`),
-                                quoted: msg
-                            });
-                            return;
-                        }
+               case 'song':
+case 'play': {
+    try {
+        const text = (msg.message.conversation || msg.message.extendedTextMessage?.text || '').trim();
+        const q = text.split(" ").slice(1).join(" ").trim();
 
-                        const loadingMsg = await socket.sendMessage(sender, { 
-                            text: `╭─ *🎵 SEARCHING* ─❒\n│ Song: ${q}\n│ ⏳ Processing.. .\n╰──────────❒`,
-                            quoted: msg 
-                        });
+        if (!q) {
+            await socket.sendMessage(sender, {
+                text: designTemplates.errorDesign(
+                    `Please provide a song name\n\nUsage: ${config.PREFIX}song <song name>`
+                ),
+                quoted: msg
+            });
+            return;
+        }
 
-                        try {
-                            const ytResponse = await axios.get(`https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`);
-                            const videoIdMatch = ytResponse.data.match(/"videoId":"([a-zA-Z0-9_-]{11})"/);
-                            
-                            if (!videoIdMatch) {
-                                await socket.sendMessage(sender, {
-                                    text: designTemplates.errorDesign('Song not found!'),
-                                    edit: loadingMsg.key
-                                });
-                                return;
-                            }
+        /* =======================
+           1️⃣ SEARCH YOUTUBE
+        ======================= */
+        const searchMsg = await socket.sendMessage(sender, {
+            text: `🔎 Searching for *${q}*...`,
+            quoted: msg
+        });
 
-                            const videoId = videoIdMatch[1];
-                            const downloadUrl = `https://api.cobalt.tools/api/json`;
-                            
-                            const downloadResponse = await axios.post(downloadUrl, {
-                                url: `https://www.youtube.com/watch?v=${videoId}`,
-                                vCodec: 'h264',
-                                vQuality: '360',
-                                aFormat: 'mp3',
-                                filenamePattern: 'cobalt',
-                                isAudioOnly: true
-                            });
+        const searchRes = await axios.get(
+            `https://veron-apis.zone.id/search/yts?query=${encodeURIComponent(q)}`
+        );
 
-                            if (downloadResponse.data?. url) {
-                                const caption = `╭─ *🎵 SONG DOWNLOAD* ─❒
-│ Query: ${q}
-│ Status: ✅ Downloaded
-│ Format: MP3
+        const videos = searchRes.data?.result?.data;
+        if (!videos || videos.length === 0) {
+            await socket.sendMessage(sender, {
+                text: designTemplates.errorDesign('No results found!'),
+                edit: searchMsg.key
+            });
+            return;
+        }
+
+        const video = videos[0];
+
+        /* =======================
+           2️⃣ SHOW THUMBNAIL + INFO
+        ======================= */
+        const previewCaption = `╭─ *🎵 SONG FOUND* ─❒
+│ 🎧 Title: ${video.title}
+│ 👤 Channel: ${video.channel}
+│ ⏱ Duration: ${video.duration}
+│ 👀 Views: ${video.views.toLocaleString()}
 ├─ ${config.BOT_FOOTER}
 ╰──────────❒`;
 
-                                await socket.sendMessage(sender, {
-                                    audio: { url: downloadResponse.data.url },
-                                    mimetype: 'audio/mpeg',
-                                    ptt: false,
-                                    quoted: msg
-                                });
+        await socket.sendMessage(sender, {
+            image: { url: video.thumbnail },
+            caption: previewCaption,
+            edit: searchMsg.key
+        });
 
-                                await socket.sendMessage(sender, {
-                                    text: caption,
-                                    edit: loadingMsg.key
-                                });
-                            } else {
-                                throw new Error('No download URL received');
-                            }
-                        } catch (apiError) {
-                            console.error('Download error:', apiError. message);
-                            await socket. sendMessage(sender, {
-                                text: designTemplates.errorDesign('Failed to download song.  Please try again!'),
-                                edit: loadingMsg.key
-                            });
-                        }
-                    } catch (error) {
-                        console.error('Song command error:', error);
-                        await socket.sendMessage(sender, {
-                            text: designTemplates.errorDesign('An error occurred.  Please try again!'),
-                            quoted: msg
-                        });
-                    }
-                    break;
-                }
+        /* =======================
+           3️⃣ DOWNLOAD MP3
+        ======================= */
+        const dlRes = await axios.get(
+            `https://veron-apis.zone.id/downloader/youtube?url=${encodeURIComponent(video.url)}`
+        );
 
-                case 'video':  {
-                    try {
-                        const text = (msg.message.conversation || msg.message.extendedTextMessage?.text || '').trim();
-                        const q = text.split(" ").slice(1).join(" ").trim();
-                        
-                        if (!q) {
-                            await socket.sendMessage(sender, { 
-                                text: designTemplates.errorDesign(`Please provide a video name\n\nUsage: ${config.PREFIX}video <video name>`),
-                                quoted: msg
-                            });
-                            return;
-                        }
+        const dl = dlRes.data?.result;
+        if (!dl || !dl.download) {
+            throw new Error('Download failed');
+        }
 
-                        const loadingMsg = await socket.sendMessage(sender, { 
-                            text: `╭─ *🎬 SEARCHING* ─❒\n│ Video: ${q}\n│ ⏳ Processing...\n╰──────────❒`,
-                            quoted: msg 
-                        });
+        /* =======================
+           4️⃣ SEND AS DOCUMENT ONLY
+        ======================= */
+        await socket.sendMessage(sender, {
+            document: { url: dl.download },
+            mimetype: 'audio/mpeg',
+            fileName: `${dl.meta.title}.mp3`,
+            quoted: msg
+        });
 
-                        try {
-                            const ytResponse = await axios.get(`https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`);
-                            const videoIdMatch = ytResponse.data.match(/"videoId":"([a-zA-Z0-9_-]{11})"/);
-                            
-                            if (!videoIdMatch) {
-                                await socket.sendMessage(sender, {
-                                    text: designTemplates.errorDesign('Video not found!'),
-                                    edit: loadingMsg.key
-                                });
-                                return;
-                            }
+    } catch (error) {
+        console.error('Song command error:', error);
+        await socket.sendMessage(sender, {
+            text: designTemplates.errorDesign('Failed to process your request. Please try again!'),
+            quoted: msg
+        });
+    }
+    break;
+} 
+					case 'lyrics': {
+    try {
+        const text = (msg.message.conversation || msg.message.extendedTextMessage?.text || '').trim();
+        const q = text.split(" ").slice(1).join(" ").trim();
 
-                            const videoId = videoIdMatch[1];
-                            const downloadUrl = `https://api.cobalt.tools/api/json`;
-                            
-                            const downloadResponse = await axios.post(downloadUrl, {
-                                url: `https://www.youtube.com/watch?v=${videoId}`,
-                                vCodec: 'h264',
-                                vQuality: '360',
-                                filenamePattern: 'cobalt'
-                            });
+        if (!q) {
+            await socket.sendMessage(sender, {
+                text: designTemplates.errorDesign(
+                    `Please provide a song name\n\nUsage: ${config.PREFIX}lyrics <song name>`
+                ),
+                quoted: msg
+            });
+            return;
+        }
 
-                            if (downloadResponse.data?.url) {
-                                const caption = `╭─ *🎬 VIDEO DOWNLOAD* ─❒
-│ Query: ${q}
-│ Status: ✅ Downloaded
-│ Quality: 360p
+        const loadingMsg = await socket.sendMessage(sender, {
+            text: `╭─ *🎶 FETCHING LYRICS* ─❒
+│ Song: ${q}
+│ ⏳ Please wait...
+╰──────────❒`,
+            quoted: msg
+        });
+
+        const res = await axios.get(
+            `https://veron-apis.zone.id/search/lyrics?query=${encodeURIComponent(q)}`
+        );
+
+        const data = res.data?.result?.data;
+        if (!data || !data.lyrics) {
+            await socket.sendMessage(sender, {
+                text: designTemplates.errorDesign('Lyrics not found!'),
+                edit: loadingMsg.key
+            });
+            return;
+        }
+
+        const lyricsText = data.lyrics.slice(0, 4000); // WhatsApp safe limit
+
+        const caption = `╭─ *🎶 LYRICS FOUND* ─❒
+│ 🎧 Track: ${data.track}
+│ 👤 Artist: ${data.artist}
+│ 💿 Album: ${data.album}
+│ ⏱ Duration: ${data.duration}
 ├─ ${config.BOT_FOOTER}
 ╰──────────❒`;
 
-                                await socket.sendMessage(sender, {
-                                    video: { url: downloadResponse.data.url },
-                                    caption: caption,
-                                    quoted: msg
-                                });
+        await socket.sendMessage(sender, {
+            text: `${caption}\n\n${lyricsText}`,
+            edit: loadingMsg.key
+        });
 
-                                await socket.sendMessage(sender, {
-                                    text:  `Video sent successfully! `,
-                                    edit: loadingMsg.key
-                                });
-                            } else {
-                                throw new Error('No download URL received');
-                            }
-                        } catch (apiError) {
-                            console.error('Download error:', apiError.message);
-                            await socket.sendMessage(sender, {
-                                text:  designTemplates.errorDesign('Failed to download video. Please try again!'),
-                                edit: loadingMsg.key
-                            });
-                        }
-                    } catch (error) {
-                        console.error('Video command error:', error);
-                        await socket. sendMessage(sender, {
-                            text: designTemplates.errorDesign('An error occurred. Please try again!'),
-                            quoted: msg
-                        });
-                    }
-                    break;
-                }
-
+    } catch (error) {
+        console.error('Lyrics command error:', error);
+        await socket.sendMessage(sender, {
+            text: designTemplates.errorDesign('Failed to fetch lyrics. Please try again!'),
+            quoted: msg
+        });
+    }
+    break;
+			}
                 // STICKER COMMAND
                 case 'sticker':  {
                     try {
