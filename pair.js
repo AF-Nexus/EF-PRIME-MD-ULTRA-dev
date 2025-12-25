@@ -2079,7 +2079,7 @@ function setupCommandHandlers(socket, number) {
                     }
 
                     try {
-                        const mentionedJid = msg.message.extendedTextMessage? . contextInfo?. mentionedJid || [];
+                        const mentionedJid = msg.message.extendedTextMessage?.contextInfo?. mentionedJid || [];
                         const user = mentionedJid[0];
 
                         if (!user) {
